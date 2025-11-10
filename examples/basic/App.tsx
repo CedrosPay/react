@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { CedrosPay, CedrosProvider, useCedrosTheme } from "@cedros/pay-react";
 import "@cedros/pay-react/style.css";
 
@@ -17,20 +17,21 @@ function ThemeSwitcher() {
   );
 }
 
+// Environment variables with fallbacks
+const config = {
+  stripePublicKey:
+    (import.meta as any).env?.VITE_STRIPE_PUBLIC_KEY || "pk_test_placeholder",
+  serverUrl: (import.meta as any).env?.VITE_SERVER_URL || "http://localhost:8080",
+  solanaCluster: ((import.meta as any).env?.VITE_SOLANA_CLUSTER ||
+    "mainnet-beta") as "mainnet-beta" | "devnet" | "testnet",
+  theme: "light" as const,
+};
+
 export default function App() {
   const [isUnlocked, setIsUnlocked] = useState(false);
 
   return (
-    <CedrosProvider
-      config={{
-        stripePublicKey:
-          import.meta.env.VITE_STRIPE_PUBLIC_KEY || "pk_test_placeholder",
-        serverUrl: import.meta.env.VITE_SERVER_URL || "http://localhost:8080",
-        solanaCluster: (import.meta.env.VITE_SOLANA_CLUSTER ||
-          "mainnet-beta") as "mainnet-beta" | "devnet" | "testnet",
-        theme: "light",
-      }}
-    >
+    <CedrosProvider config={config}>
       <main style={{ maxWidth: 480, margin: "0 auto", padding: "2rem" }}>
         <h1 style={{ marginBottom: "1rem" }}>Cedros Pay Demo</h1>
         <ThemeSwitcher />
