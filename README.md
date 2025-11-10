@@ -5,65 +5,142 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.4-blue.svg)](https://www.typescriptlang.org/)
 [![Bundle Size](https://img.shields.io/bundlephobia/minzip/@cedros/pay-react)](https://bundlephobia.com/package/@cedros/pay-react)
 [![Stripe-only: <100KB](https://img.shields.io/badge/stripe--only-%3C100KB-success)]()
-[![Tests](https://img.shields.io/badge/tests-55%20passed-brightgreen)](https://github.com/cedros-tech/pay-react)
+[![Tests](https://img.shields.io/badge/tests-55%20passed-brightgreen)](https://github.com/CedrosPay/react)
 
-> **Unified payments for humans and agents — from Solana Beach to the web.**
+> **Add crypto to your store without building crypto.**
 
-## ⚠️ BREAKING CHANGES (v2.0.0+)
-
-**Version 2.0.0 introduces security improvements that require backend updates.**
-
-### What Changed
-
-- **NEW:** API v1 versioning (`/paywall/v1/*` endpoints) for stable API contracts
-- **NEW:** Generic endpoints (`/paywall/v1/quote`, `/paywall/v1/verify`) prevent resource ID leakage
-- **REMOVED:** Resource-specific endpoints (`/paywall/{resource}`, `/paywall/cart/{id}`)
-- **SECURITY:** Resource IDs now sent in request bodies and X-PAYMENT headers (not URLs)
-
-## 🌅 Why Cedros Pay?
-
-Built as a nod to **Solana Beach’s Cedros Avenue**, Cedros Pay embodies the connection between **old-world payments and new-world rails** — Stripe’s fiat system and Solana’s instant, decentralized network.
-
-Whether you're building a paywalled blog, an agentic API, or a marketplace, Cedros Pay handles both sides:
-
-- Stripe-hosted checkout for credit/debit cards.
-- x402-verified USDC payments for instant crypto settlement.
+One React component for Stripe and Solana USDC. Uses your existing products. No deposit wallets. No monitoring. No custom crypto backend.
 
 ---
 
-## 🧩 Architecture
+## What is Cedros Pay?
 
+**One component, two payment rails.** Stripe for cards, Solana USDC for wallets. No second checkout.
+
+Cedros Pay connects traditional payments (Stripe) with crypto (Solana x402) using the product IDs you already have. No deposit wallets to manage. No wallet infrastructure to secure. No custody risk.
+
+### The Problem with Traditional Crypto Payments
+
+Adding crypto to your store traditionally requires:
+
+- Creating deposit wallets per user
+- Monitoring deposits 24/7
+- Sweeping funds to your merchant wallet
+- Storing wallet state in your database
+- Building Stripe separately
+- Maintaining two systems
+
+### The Cedros Pay Solution
+
+```tsx
+<CedrosPay
+  resource="your-product-id" // from your DB
+  onPaymentSuccess={(txId) => unlockContent(txId)}
+/>
 ```
-Frontend (React)  →  Cedros Server  →  Stripe & Solana RPC
-  |                        |
-  |---- x402 headers ----> |---- Stripe webhooks ----> DB
-```
-
-**Frontend**
-
-- React SDK (`@cedros/pay-react`) for drop-in payment buttons.
-- Uses wallet adapters for Solana and Stripe JS SDK for fiat.
-
-**Backend**
-
-- Go service handling session creation, webhooks, x402 verification, and route protection.
-- Deploy standalone or embed into existing backend.
 
 ---
 
-## 💳 Key Features
+## How It Works (x402)
 
-- 🪙 **Dual payment support** — Card + Crypto
-- ⚡ **Instant agentic payments** — Pay per request via x402
-- 🔐 **Stateless & secure** — No need for user accounts or deposit addresses
+x402 makes Solana payments stateless. The client includes a signed transaction with the request. Your backend verifies it on-chain and unlocks the resource.
+
+**Flow:**
+
+```
+Traditional:
+User → Deposit Wallet (you manage) → Monitor → Sweep → Merchant
+         ↓
+  Store state in DB
+         ↓
+  Custody risk
+
+x402:
+User → Sign Transaction → Your Backend → Verify On-Chain → Merchant (Direct)
+```
+
+**Three key benefits:**
+
+- No deposit wallets
+- No sweeping funds
+- No payment state in your DB
+
+---
+
+## Key Features
+
+### 1. One Component, Two Rails
+
+Stripe for cards, Solana USDC for wallets. No second checkout.
+
+```tsx
+<CedrosPay resource="product-1" />
+// Both payment methods work
+```
+
+### 2. Works With Your Products
+
+Pass your DB ID. No new schema.
+
+```tsx
+<CedrosPay resource="existing-product-123" />
+// resource = your database primary key
+```
+
+### 3. Real Ecommerce, Not Just a Button
+
+Carts, coupons, refunds, metadata.
+
+```tsx
+<CedrosPay
+  items={[{ resource: "item-1", quantity: 2 }]}
+  couponCode="LAUNCH50"
+/>
+```
+
+### 4. Auto-Detects Wallet
+
+No wallet: card only. Wallet: card and crypto.
+
+```tsx
+// User without wallet sees:
+[Pay with Card] button
+
+// User with Phantom sees:
+[Pay with Card] [Pay with Crypto]
+```
+
+### 5. Agent-Ready
+
+x402 over HTTP; agents pay per request.
+
+```bash
+GET /api/premium-data
+X-PAYMENT: <signed-transaction>
+# Agent gets data instantly
+```
+
+### 6. Self-Host or Roll Your Own
+
+React UI + Go backend. Open API.
+
+```tsx
+<CedrosPay resource="item" wallets={customWallets} renderModal={CustomModal} />
+```
+
+**Additional Features:**
+
 - 🌍 **Open source** — MIT-licensed and extensible
+- 🔐 **Stateless & secure** — No user accounts or deposit addresses required
 - 🧱 **Minimal integration** — Middleware or proxy for Go APIs
 
 ---
 
-## 🚀 Quick Start
+## Quick Start (3 Steps in ~3 Minutes)
 
-### Installation
+If you can wrap a provider, you can ship dual payments.
+
+### Step 1: Install
 
 **Option 1: Stripe + Crypto (Full Features)**
 
@@ -103,12 +180,6 @@ function App() {
   );
 }
 ```
-
-**Bundle Size Comparison:**
-
-- `@cedros/pay-react` (full): ~100KB + 850KB Solana peer deps
-- `@cedros/pay-react/stripe-only`: ~75KB (no Solana deps)
-- `@cedros/pay-react/crypto-only`: ~100KB + 850KB Solana peer deps
 
 ### CDN Usage (Optional)
 
@@ -185,10 +256,12 @@ function App() {
 <CedrosPay resource="item-id" display={{ showCrypto: false }} />
 ```
 
-### Basic Usage
+### Step 2: Configure Provider
+
+Wrap your app with credentials + cluster:
 
 ```tsx
-import { CedrosPay, CedrosProvider } from "@cedros/pay-react";
+import { CedrosProvider } from "@cedros/pay-react";
 import "@cedros/pay-react/style.css";
 
 function App() {
@@ -196,25 +269,45 @@ function App() {
     <CedrosProvider
       config={{
         stripePublicKey: "pk_test_...",
-        serverUrl: window.location.origin,
+        serverUrl: "https://your-api.com",
         solanaCluster: "mainnet-beta",
-        // serverUrl defaults to window.location.origin
-        // Only needed if your backend is on a different domain
       }}
     >
-      <CedrosPay
-        resource="demo-item-id-1"
-        callbacks={{
-          onPaymentSuccess: (result) =>
-            console.log("Payment successful!", result.transactionId),
-          onPaymentError: (error) =>
-            console.error("Payment failed:", error.message),
-        }}
-      />
+      <YourApp />
     </CedrosProvider>
   );
 }
 ```
+
+### Step 3: Drop in the Component
+
+On success → fulfill order:
+
+```tsx
+import { CedrosPay } from "@cedros/pay-react";
+
+function Checkout() {
+  return (
+    <CedrosPay
+      resource="your-product-id"
+      callbacks={{
+        onPaymentSuccess: (result) => {
+          // Unlock content / fulfill order
+          unlockContent(result.transactionId);
+        },
+      }}
+    />
+  );
+}
+```
+
+**Backend options:** Use the Go server, or implement the open API.
+
+**Links:**
+
+- [Backend setup →](https://github.com/CedrosPay/server)
+- [Full docs →](https://docs.cedrospay.com)
+- [Example apps →](https://github.com/CedrosPay/react/tree/main/examples)
 
 **Cross-Domain Backend (Optional):**
 If your backend is on a different domain (e.g., `api.example.com` while your frontend is on `example.com`), explicitly set `serverUrl`:
@@ -327,7 +420,7 @@ See [Backend Integration](https://github.com/CedrosPay/server) and `@backend-mig
 
 ---
 
-## 🔒 Production Deployment
+## Production Deployment
 
 ### Content Security Policy (CSP) Headers
 
@@ -685,8 +778,7 @@ const csp = generateCSP({
   customRpcProviders: [
     RPC_PROVIDERS.HELIUS, // https://*.helius-rpc.com
     RPC_PROVIDERS.QUICKNODE, // https://*.quicknode.pro
-    RPC_PROVIDERS.ALCHEMY, // https://*.alchemy.com
-    RPC_PROVIDERS.ANKR, // https://rpc.ankr.com
+    RPC_PROVIDERS.FLUX, // https://*.fluxrpc.com
     RPC_PROVIDERS.TRITON, // https://*.rpcpool.com
   ],
 });
@@ -942,7 +1034,7 @@ The i18n system:
 
 ---
 
-## 🔄 Type Versioning Policy
+## Type Versioning Policy
 
 Cedros Pay uses **semantic versioning for TypeScript types** to prevent breaking changes from affecting your code.
 
@@ -1188,7 +1280,7 @@ For complete control over styling, use the `unstyled` prop to disable all defaul
 
 ---
 
-## 🎛️ Props Reference
+## Props Reference
 
 ### CedrosProvider Configuration
 
@@ -1467,10 +1559,6 @@ All logs include timestamps and severity levels:
 
 ---
 
-## 🔒 API Stability & Versioning
-
-Cedros Pay is designed for enterprise use with a strong commitment to API stability.
-
 ### Semantic Versioning
 
 We follow [Semantic Versioning](https://semver.org/):
@@ -1542,7 +1630,7 @@ const newReq: v2.X402Requirement = { ... };
 
 ---
 
-## 📡 Error Telemetry (Optional)
+## Error Telemetry (Optional)
 
 Cedros Pay includes **opt-in error telemetry** with correlation IDs for production debugging. Telemetry is **disabled by default** and requires explicit configuration.
 
@@ -1619,22 +1707,7 @@ function PaymentButton() {
 }
 ```
 
-**Full Integration Guide:** See [TELEMETRY_INTEGRATIONS.md](./TELEMETRY_INTEGRATIONS.md) for complete examples with Sentry, Datadog, and custom backends.
-
----
-
-## 🧭 Roadmap
-
-- Stripe + x402 unified dashboard
-- Subscription management
-- Facilitator integrations (PayAI, Kora)
-- Typed SDKs for Go, Node, and Python agents
-
----
-
-**Cedros Pay** — _rooted in Solana, built for the web._
-
-## 🎨 Storybook Development
+## Storybook Development
 
 ### Setup
 
@@ -1679,6 +1752,7 @@ function PaymentButton() {
 This means `VITE_SOLANA_RPC_URL` or `VITE_STORYBOOK_SOLANA_ENDPOINT` is missing or empty in your `.env` file.
 
 **Fix:**
+
 ```bash
 # Add to .env
 VITE_SOLANA_RPC_URL=https://api.devnet.solana.com
@@ -1691,6 +1765,7 @@ VITE_STORYBOOK_SOLANA_ENDPOINT=https://api.devnet.solana.com
 The `VITE_SERVER_URL` or `VITE_STORYBOOK_SERVER_URL` is missing.
 
 **Fix:**
+
 ```bash
 # Add to .env
 VITE_SERVER_URL=http://localhost:8080
@@ -1707,7 +1782,7 @@ VITE_SERVER_URL=http://localhost:8080
 | `VITE_STORYBOOK_SERVER_URL`      | Override server URL for Storybook | Optional                              |
 | `VITE_STORYBOOK_SOLANA_ENDPOINT` | Override RPC for Storybook        | Optional                              |
 
-## 🤝 Contributing
+## Contributing
 
 We welcome contributions! Please see [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines on:
 
@@ -1726,6 +1801,6 @@ npm test
 npm run test:coverage
 ```
 
-## 📄 License
+## License
 
 MIT License - see [LICENSE](./LICENSE) for details.

@@ -1,6 +1,6 @@
 {
   "name": "@cedros/pay-react",
-  "version": "0.1.0",
+  "version": "1.0.1",
   "description": "React frontend library for Cedros Pay - unified Stripe and Solana x402 payments",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
@@ -42,7 +42,8 @@
     "solana",
     "x402",
     "crypto",
-    "react"
+    "react",
+    "stablecoins"
   ],
   "author": "Cedros Pay Team",
   "license": "MIT",
