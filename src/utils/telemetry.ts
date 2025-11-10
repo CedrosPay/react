@@ -161,7 +161,7 @@ let telemetryConfig: TelemetryConfig = {
  *
  * @example
  * ```typescript
- * import { configureTelemetry } from '@cedrospay/react';
+ * import { configureTelemetry } from '@cedros/pay-react';
  * import * as Sentry from '@sentry/react';
  *
  * configureTelemetry({

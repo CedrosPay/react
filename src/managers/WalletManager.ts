@@ -107,7 +107,7 @@ export interface IWalletManager {
  *
  * **Correct Usage:**
  * ```typescript
- * import { useCedrosContext } from '@cedrospay/react';
+ * import { useCedrosContext } from '@cedros/pay-react';
  *
  * function MyComponent() {
  *   const { walletManager } = useCedrosContext();

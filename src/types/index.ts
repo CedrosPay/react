@@ -8,9 +8,9 @@
  * - Older versions remain available for backward compatibility
  *
  * Example:
- *   import { X402Requirement } from '@cedrospay/react'; // Current version (v1)
- *   import { v1 } from '@cedrospay/react'; // Explicit v1
- *   import { v2 } from '@cedrospay/react'; // Future version
+ *   import { X402Requirement } from '@cedros/pay-react'; // Current version (v1)
+ *   import { v1 } from '@cedros/pay-react'; // Explicit v1
+ *   import { v2 } from '@cedros/pay-react'; // Future version
  */
 
 /**

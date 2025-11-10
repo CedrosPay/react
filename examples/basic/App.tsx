@@ -1,20 +1,16 @@
-import { useState } from 'react';
-import {
-  CedrosPay,
-  CedrosProvider,
-  useCedrosTheme,
-} from '@cedrospay/react';
-import '@cedrospay/react/style.css';
+import { useState } from "react";
+import { CedrosPay, CedrosProvider, useCedrosTheme } from "@cedros/pay-react";
+import "@cedros/pay-react/style.css";
 
 function ThemeSwitcher() {
   const { mode, setMode } = useCedrosTheme();
-  const nextMode = mode === 'light' ? 'dark' : 'light';
+  const nextMode = mode === "light" ? "dark" : "light";
 
   return (
     <button
       type="button"
       onClick={() => setMode(nextMode)}
-      style={{ marginBottom: '1rem' }}
+      style={{ marginBottom: "1rem" }}
     >
       Switch to {nextMode} mode
     </button>
@@ -27,32 +23,36 @@ export default function App() {
   return (
     <CedrosProvider
       config={{
-        stripePublicKey: import.meta.env.VITE_STRIPE_PUBLIC_KEY || 'pk_test_placeholder',
-        serverUrl: import.meta.env.VITE_SERVER_URL || 'http://localhost:8080',
-        solanaCluster: (import.meta.env.VITE_SOLANA_CLUSTER || 'mainnet-beta') as 'mainnet-beta' | 'devnet' | 'testnet',
-        theme: 'light',
+        stripePublicKey:
+          import.meta.env.VITE_STRIPE_PUBLIC_KEY || "pk_test_placeholder",
+        serverUrl: import.meta.env.VITE_SERVER_URL || "http://localhost:8080",
+        solanaCluster: (import.meta.env.VITE_SOLANA_CLUSTER ||
+          "mainnet-beta") as "mainnet-beta" | "devnet" | "testnet",
+        theme: "light",
       }}
     >
-      <main style={{ maxWidth: 480, margin: '0 auto', padding: '2rem' }}>
-        <h1 style={{ marginBottom: '1rem' }}>Cedros Pay Demo</h1>
+      <main style={{ maxWidth: 480, margin: "0 auto", padding: "2rem" }}>
+        <h1 style={{ marginBottom: "1rem" }}>Cedros Pay Demo</h1>
         <ThemeSwitcher />
 
         <CedrosPay
           resource="demo-item-id-1"
           callbacks={{
             onPaymentSuccess: (result) => {
-              console.log('Payment successful!', result);
+              console.log("Payment successful!", result);
               setIsUnlocked(true);
             },
-            onPaymentError: (error) => console.error('Payment error:', error)
+            onPaymentError: (error) => console.error("Payment error:", error),
           }}
         />
 
-        <section style={{ marginTop: '1.5rem' }}>
+        <section style={{ marginTop: "1.5rem" }}>
           {isUnlocked ? (
             <p>🎉 Content unlocked! Render your premium experience here.</p>
           ) : (
-            <p>Purchase access for $1 or 1 USDC to unlock the hidden content.</p>
+            <p>
+              Purchase access for $1 or 1 USDC to unlock the hidden content.
+            </p>
           )}
         </section>
       </main>

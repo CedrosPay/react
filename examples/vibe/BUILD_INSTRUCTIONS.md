@@ -11,6 +11,7 @@
 **What you're building:** A React demo app showcasing Cedros Pay's dual payment system (Stripe + Solana).
 
 **Key features:**
+
 - Single product purchase page (ebook for $1)
 - Multi-item cart page (ebook + coffee tip for $2 total)
 - Wallet connection UI with Phantom/Solflare support
@@ -18,9 +19,10 @@
 - Theme switching (light/dark mode)
 
 **Tech stack:**
+
 - React 18+ with TypeScript
 - Vite (build tool)
-- @cedrospay/react (payment components)
+- @cedros/pay-react (payment components)
 - Solana wallet adapters
 - React Router DOM
 
@@ -30,14 +32,14 @@
 
 Before starting, you can customize these values:
 
-| What | Default | Change to... |
-|------|---------|--------------|
-| **App name** | `cedros-pay-ebook-demo` | Your app name |
-| **Resource IDs** | `ebook-guide`, `coffee-tip` | Your product IDs |
-| **Prices** | $1.00 each | Your prices (configured in backend) |
-| **PDF filename** | `cedros-guide-to-generational-wealth.pdf` | Your digital product |
-| **Page titles** | "Ebook", "Cart" | Your product names |
-| **Success action** | Open PDF in new tab | Redirect, show content, etc. |
+| What               | Default                                   | Change to...                        |
+| ------------------ | ----------------------------------------- | ----------------------------------- |
+| **App name**       | `cedros-pay-ebook-demo`                   | Your app name                       |
+| **Resource IDs**   | `ebook-guide`, `coffee-tip`               | Your product IDs                    |
+| **Prices**         | $1.00 each                                | Your prices (configured in backend) |
+| **PDF filename**   | `cedros-guide-to-generational-wealth.pdf` | Your digital product                |
+| **Page titles**    | "Ebook", "Cart"                           | Your product names                  |
+| **Success action** | Open PDF in new tab                       | Redirect, show content, etc.        |
 
 ---
 
@@ -56,7 +58,7 @@ cd cedros-pay-ebook-demo
 npm install
 
 # Install Cedros Pay
-npm install @cedrospay/react
+npm install @cedros/pay-react
 
 # Install Solana wallet adapters
 npm install @solana/web3.js @solana/wallet-adapter-react @solana/wallet-adapter-base @solana/wallet-adapter-wallets @solana/wallet-adapter-react-ui
@@ -110,6 +112,7 @@ mkdir -p src/routes src/components src/lib public
 Create a placeholder PDF or add your actual PDF:
 
 **Option A - Placeholder:**
+
 ```bash
 # Create a simple placeholder text file
 echo "Your ebook content here" > public/cedros-guide-to-generational-wealth.pdf
@@ -127,13 +130,20 @@ Copy your actual PDF file to `public/cedros-guide-to-generational-wealth.pdf`
 Create `src/components/WalletConnection.tsx`:
 
 ```tsx
-import { FC, PropsWithChildren, useMemo } from 'react';
-import { ConnectionProvider, WalletProvider } from '@solana/wallet-adapter-react';
-import { WalletModalProvider } from '@solana/wallet-adapter-react-ui';
-import { PhantomWalletAdapter, SolflareWalletAdapter } from '@solana/wallet-adapter-wallets';
-import '@solana/wallet-adapter-react-ui/styles.css';
+import { FC, PropsWithChildren, useMemo } from "react";
+import {
+  ConnectionProvider,
+  WalletProvider,
+} from "@solana/wallet-adapter-react";
+import { WalletModalProvider } from "@solana/wallet-adapter-react-ui";
+import {
+  PhantomWalletAdapter,
+  SolflareWalletAdapter,
+} from "@solana/wallet-adapter-wallets";
+import "@solana/wallet-adapter-react-ui/styles.css";
 
-const endpoint = import.meta.env.VITE_SOLANA_RPC_URL || 'https://api.devnet.solana.com';
+const endpoint =
+  import.meta.env.VITE_SOLANA_RPC_URL || "https://api.devnet.solana.com";
 
 export const WalletConnection: FC<PropsWithChildren> = ({ children }) => {
   const wallets = useMemo(
@@ -162,8 +172,8 @@ Create `src/lib/payment.ts`:
 ```ts
 export function openEbookAfterSuccess() {
   // PDF is served from /public:
-  const url = '/cedros-guide-to-generational-wealth.pdf';
-  window.open(url, '_blank', 'noopener,noreferrer');
+  const url = "/cedros-guide-to-generational-wealth.pdf";
+  window.open(url, "_blank", "noopener,noreferrer");
 }
 ```
 
@@ -178,8 +188,8 @@ export function openEbookAfterSuccess() {
 Create `src/components/PurchaseExamples.tsx`:
 
 ```tsx
-import { openEbookAfterSuccess } from '../lib/payment';
-import { CedrosPay } from '@cedrospay/react';
+import { openEbookAfterSuccess } from "../lib/payment";
+import { CedrosPay } from "@cedros/pay-react";
 
 // SINGLE PRODUCT — $1 Ebook
 export function EbookPurchaseButton() {
@@ -188,12 +198,12 @@ export function EbookPurchaseButton() {
       resource="ebook-guide"
       callbacks={{
         onPaymentSuccess: (result) => {
-          console.log('Payment successful:', result);
+          console.log("Payment successful:", result);
           openEbookAfterSuccess();
         },
         onPaymentError: (error) => {
-          console.error('Payment failed:', error);
-        }
+          console.error("Payment failed:", error);
+        },
       }}
     />
   );
@@ -204,17 +214,17 @@ export function CartPurchaseButton() {
   return (
     <CedrosPay
       items={[
-        { resource: 'ebook-guide', quantity: 1 },
-        { resource: 'coffee-tip', quantity: 1 }
+        { resource: "ebook-guide", quantity: 1 },
+        { resource: "coffee-tip", quantity: 1 },
       ]}
       callbacks={{
         onPaymentSuccess: (result) => {
-          console.log('Cart payment successful:', result);
+          console.log("Cart payment successful:", result);
           openEbookAfterSuccess();
         },
         onPaymentError: (error) => {
-          console.error('Cart payment failed:', error);
-        }
+          console.error("Cart payment failed:", error);
+        },
       }}
     />
   );
@@ -236,12 +246,21 @@ export default function Home() {
   return (
     <div>
       <h2>Welcome to Cedros Pay Demo</h2>
-      <p>This demo showcases the CedrosPay component for both single product and cart purchases.</p>
+      <p>
+        This demo showcases the CedrosPay component for both single product and
+        cart purchases.
+      </p>
       <ul>
-        <li><strong>Ebook page:</strong> Single $1 purchase</li>
-        <li><strong>Cart page:</strong> $2 total (Ebook $1 + Coffee $1)</li>
+        <li>
+          <strong>Ebook page:</strong> Single $1 purchase
+        </li>
+        <li>
+          <strong>Cart page:</strong> $2 total (Ebook $1 + Coffee $1)
+        </li>
       </ul>
-      <p>Payment methods available: Credit Card (Stripe) + Crypto (Solana USDC)</p>
+      <p>
+        Payment methods available: Credit Card (Stripe) + Crypto (Solana USDC)
+      </p>
     </div>
   );
 }
@@ -250,7 +269,7 @@ export default function Home() {
 #### `src/routes/EbookPage.tsx`
 
 ```tsx
-import { EbookPurchaseButton } from '../components/PurchaseExamples';
+import { EbookPurchaseButton } from "../components/PurchaseExamples";
 
 export default function EbookPage() {
   return (
@@ -267,24 +286,24 @@ export default function EbookPage() {
 #### `src/routes/CartPage.tsx`
 
 ```tsx
-import { CartPurchaseButton } from '../components/PurchaseExamples';
+import { CartPurchaseButton } from "../components/PurchaseExamples";
 
 export default function CartPage() {
   return (
     <section>
       <h2>Your Cart</h2>
-      <ul style={{ listStyle: 'none', padding: 0 }}>
-        <li style={{ padding: '8px 0', borderBottom: '1px solid #eee' }}>
+      <ul style={{ listStyle: "none", padding: 0 }}>
+        <li style={{ padding: "8px 0", borderBottom: "1px solid #eee" }}>
           <span>Cedros Guide to Generational Wealth (PDF)</span>
-          <span style={{ float: 'right' }}>$1.00</span>
+          <span style={{ float: "right" }}>$1.00</span>
         </li>
-        <li style={{ padding: '8px 0', borderBottom: '1px solid #eee' }}>
+        <li style={{ padding: "8px 0", borderBottom: "1px solid #eee" }}>
           <span>Buy me a coffee ☕</span>
-          <span style={{ float: 'right' }}>$1.00</span>
+          <span style={{ float: "right" }}>$1.00</span>
         </li>
-        <li style={{ padding: '8px 0', fontWeight: 'bold' }}>
+        <li style={{ padding: "8px 0", fontWeight: "bold" }}>
           <span>Total</span>
-          <span style={{ float: 'right' }}>$2.00</span>
+          <span style={{ float: "right" }}>$2.00</span>
         </li>
       </ul>
       <CartPurchaseButton />
@@ -302,31 +321,64 @@ export default function CartPage() {
 Replace `src/App.tsx` with:
 
 ```tsx
-import { Routes, Route, Link } from 'react-router-dom';
-import { CedrosProvider } from '@cedrospay/react';
-import '@cedrospay/react/style.css';
-import Home from './routes/Home';
-import EbookPage from './routes/EbookPage';
-import CartPage from './routes/CartPage';
-import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
+import { Routes, Route, Link } from "react-router-dom";
+import { CedrosProvider } from "@cedros/pay-react";
+import "@cedros/pay-react/style.css";
+import Home from "./routes/Home";
+import EbookPage from "./routes/EbookPage";
+import CartPage from "./routes/CartPage";
+import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 
 export default function App() {
   return (
     <CedrosProvider
       stripePublicKey={import.meta.env.VITE_STRIPE_PUBLIC_KEY}
-      serverUrl={import.meta.env.VITE_SERVER_URL || 'http://localhost:8080'}
-      solanaCluster={import.meta.env.VITE_SOLANA_CLUSTER || 'devnet'}
+      serverUrl={import.meta.env.VITE_SERVER_URL || "http://localhost:8080"}
+      solanaCluster={import.meta.env.VITE_SOLANA_CLUSTER || "devnet"}
     >
-      <div style={{ maxWidth: 800, margin: '40px auto', padding: 16 }}>
-        <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+      <div style={{ maxWidth: 800, margin: "40px auto", padding: 16 }}>
+        <header
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginBottom: "2rem",
+          }}
+        >
           <h1 style={{ margin: 0 }}>Cedros Pay Demo</h1>
           <WalletMultiButton />
         </header>
 
-        <nav style={{ marginBottom: '2rem', borderBottom: '2px solid #eee', paddingBottom: '1rem' }}>
-          <Link to="/" style={{ marginRight: 20, textDecoration: 'none', color: '#0066cc' }}>Home</Link>
-          <Link to="/ebook" style={{ marginRight: 20, textDecoration: 'none', color: '#0066cc' }}>Ebook</Link>
-          <Link to="/cart" style={{ textDecoration: 'none', color: '#0066cc' }}>Cart</Link>
+        <nav
+          style={{
+            marginBottom: "2rem",
+            borderBottom: "2px solid #eee",
+            paddingBottom: "1rem",
+          }}
+        >
+          <Link
+            to="/"
+            style={{
+              marginRight: 20,
+              textDecoration: "none",
+              color: "#0066cc",
+            }}
+          >
+            Home
+          </Link>
+          <Link
+            to="/ebook"
+            style={{
+              marginRight: 20,
+              textDecoration: "none",
+              color: "#0066cc",
+            }}
+          >
+            Ebook
+          </Link>
+          <Link to="/cart" style={{ textDecoration: "none", color: "#0066cc" }}>
+            Cart
+          </Link>
         </nav>
 
         <Routes>
@@ -349,14 +401,14 @@ export default function App() {
 Replace `src/main.tsx` with:
 
 ```tsx
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import { BrowserRouter } from 'react-router-dom';
-import App from './App';
-import { WalletConnection } from './components/WalletConnection';
-import './index.css';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import { BrowserRouter } from "react-router-dom";
+import App from "./App";
+import { WalletConnection } from "./components/WalletConnection";
+import "./index.css";
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
+ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <WalletConnection>
       <BrowserRouter>
@@ -387,11 +439,13 @@ rm src/App.css
 **IMPORTANT:** Your Cedros Pay backend must define these resources:
 
 #### Resource: `ebook-guide`
+
 - Price: $1.00 USD
 - USDC equivalent: ~1 USDC
 - Description: "Cedros Guide to Generational Wealth (PDF)"
 
 #### Resource: `coffee-tip`
+
 - Price: $1.00 USD
 - USDC equivalent: ~1 USDC
 - Description: "Buy me a coffee"
@@ -409,6 +463,7 @@ npm run dev
 ```
 
 **Expected output:**
+
 ```
 VITE v5.x.x  ready in xxx ms
 
@@ -423,6 +478,7 @@ Open `http://localhost:5173` in your browser.
 ### Step 14: Testing Checklist
 
 **Frontend testing:**
+
 - [ ] App loads without errors
 - [ ] Navigation works (Home, Ebook, Cart)
 - [ ] Wallet connect button appears (top right)
@@ -430,12 +486,14 @@ Open `http://localhost:5173` in your browser.
 - [ ] Both Stripe and Solana payment options show
 
 **Wallet testing:**
+
 - [ ] Click "Select Wallet" - modal opens
 - [ ] Phantom/Solflare wallets appear in list
 - [ ] Connect wallet - shows connected address
 - [ ] Disconnect works
 
 **Stripe payment testing:**
+
 - [ ] Click "Pay with Card" button
 - [ ] Redirects to Stripe checkout
 - [ ] Use test card: `4242 4242 4242 4242`
@@ -444,6 +502,7 @@ Open `http://localhost:5173` in your browser.
 - [ ] PDF opens in new tab
 
 **Crypto payment testing:**
+
 - [ ] Connect wallet first
 - [ ] Click "Pay with Crypto" button
 - [ ] Wallet prompts for transaction approval
@@ -535,7 +594,7 @@ In `src/lib/payment.ts`:
 // Instead of opening PDF:
 export function onPaymentSuccess() {
   // Option 1: Redirect
-  window.location.href = '/thank-you';
+  window.location.href = "/thank-you";
 
   // Option 2: Show content
   // (Use state management to unlock content)
@@ -550,6 +609,7 @@ export function onPaymentSuccess() {
 ### Add Styling
 
 **Option A - Tailwind CSS:**
+
 ```bash
 npm install -D tailwindcss postcss autoprefixer
 npx tailwindcss init -p
@@ -588,6 +648,7 @@ npm run build
 ### Environment Variables
 
 Make sure to set these in your hosting platform:
+
 - `VITE_STRIPE_PUBLIC_KEY`
 - `VITE_SERVER_URL`
 - `VITE_SOLANA_CLUSTER`
@@ -597,27 +658,32 @@ Make sure to set these in your hosting platform:
 
 ## 🐛 Troubleshooting
 
-### "Module not found: @cedrospay/react"
-- Run `npm install @cedrospay/react`
+### "Module not found: @cedros/pay-react"
+
+- Run `npm install @cedros/pay-react`
 - Restart dev server
 
 ### Wallet button doesn't appear
+
 - Check `@solana/wallet-adapter-react-ui` is installed
 - Verify `WalletConnection` wrapper in `main.tsx`
 - Check browser console for errors
 
 ### Payment buttons don't show
+
 - Verify `CedrosProvider` wraps your app
 - Check environment variables are set
 - Verify backend is running on `VITE_SERVER_URL`
 
 ### Backend connection failed
+
 - Ensure backend is running
 - Check `VITE_SERVER_URL` points to correct address
 - Verify CORS is enabled on backend
 - Check browser network tab for request errors
 
 ### PDF doesn't open
+
 - Verify file exists in `public/` folder
 - Check browser pop-up blocker settings
 - Verify filename matches in `payment.ts`
@@ -626,7 +692,7 @@ Make sure to set these in your hosting platform:
 
 ## 📚 Additional Resources
 
-- [Cedros Pay React SDK](https://github.com/CedrosPay/react)
+- [Cedros Pay React SDK](https://github.com/cedros/pay-react)
 - [Cedros Pay Server](https://github.com/CedrosPay/server)
 - [Solana Wallet Adapter Docs](https://github.com/solana-labs/wallet-adapter)
 - [Stripe Testing Cards](https://stripe.com/docs/testing)

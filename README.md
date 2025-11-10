@@ -1,11 +1,11 @@
 # Cedros Pay
 
-[![npm version](https://badge.fury.io/js/%40cedrospay%2Freact.svg)](https://www.npmjs.com/package/@cedrospay/react)
+[![npm version](https://badge.fury.io/js/%40cedros%2Fpay-react.svg)](https://www.npmjs.com/package/@cedros/pay-react)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.4-blue.svg)](https://www.typescriptlang.org/)
-[![Bundle Size](https://img.shields.io/bundlephobia/minzip/@cedrospay/react)](https://bundlephobia.com/package/@cedrospay/react)
+[![Bundle Size](https://img.shields.io/bundlephobia/minzip/@cedros/pay-react)](https://bundlephobia.com/package/@cedros/pay-react)
 [![Stripe-only: <100KB](https://img.shields.io/badge/stripe--only-%3C100KB-success)]()
-[![Tests](https://img.shields.io/badge/tests-55%20passed-brightgreen)](https://github.com/CedrosPay/react)
+[![Tests](https://img.shields.io/badge/tests-55%20passed-brightgreen)](https://github.com/cedros-tech/pay-react)
 
 > **Unified payments for humans and agents — from Solana Beach to the web.**
 
@@ -41,7 +41,7 @@ Frontend (React)  →  Cedros Server  →  Stripe & Solana RPC
 
 **Frontend**
 
-- React SDK (`@cedrospay/react`) for drop-in payment buttons.
+- React SDK (`@cedros/pay-react`) for drop-in payment buttons.
 - Uses wallet adapters for Solana and Stripe JS SDK for fiat.
 
 **Backend**
@@ -68,7 +68,7 @@ Frontend (React)  →  Cedros Server  →  Stripe & Solana RPC
 **Option 1: Stripe + Crypto (Full Features)**
 
 ```bash
-npm install @cedrospay/react \
+npm install @cedros/pay-react \
   @solana/web3.js \
   @solana/spl-token \
   @solana/wallet-adapter-base \
@@ -80,14 +80,14 @@ npm install @cedrospay/react \
 **Option 2: Stripe Only (Smaller Bundle - ~75KB)**
 
 ```bash
-npm install @cedrospay/react
+npm install @cedros/pay-react
 ```
 
 Use the `stripe-only` entry point to get a dramatically smaller bundle:
 
 ```tsx
-import { CedrosProvider, StripeButton } from "@cedrospay/react/stripe-only";
-import "@cedrospay/react/style.css";
+import { CedrosProvider, StripeButton } from "@cedros/pay-react/stripe-only";
+import "@cedros/pay-react/style.css";
 
 function App() {
   return (
@@ -106,9 +106,9 @@ function App() {
 
 **Bundle Size Comparison:**
 
-- `@cedrospay/react` (full): ~100KB + 850KB Solana peer deps
-- `@cedrospay/react/stripe-only`: ~75KB (no Solana deps)
-- `@cedrospay/react/crypto-only`: ~100KB + 850KB Solana peer deps
+- `@cedros/pay-react` (full): ~100KB + 850KB Solana peer deps
+- `@cedros/pay-react/stripe-only`: ~75KB (no Solana deps)
+- `@cedros/pay-react/crypto-only`: ~100KB + 850KB Solana peer deps
 
 ### CDN Usage (Optional)
 
@@ -118,7 +118,7 @@ For zero-build prototyping or simple sites, you can import directly from a CDN:
 <!-- Styles -->
 <link
   rel="stylesheet"
-  href="https://unpkg.com/@cedrospay/react@0.1.0/dist/style.css"
+  href="https://unpkg.com/@cedros/pay-react@0.1.0/dist/style.css"
 />
 
 <!-- Library (ESM) -->
@@ -126,15 +126,15 @@ For zero-build prototyping or simple sites, you can import directly from a CDN:
   import {
     CedrosProvider,
     StripeButton,
-  } from "https://unpkg.com/@cedrospay/react@0.1.0/dist/index.mjs";
+  } from "https://unpkg.com/@cedros/pay-react@0.1.0/dist/index.mjs";
   // Your code here
 </script>
 ```
 
 **CDN Options:**
 
-- [unpkg.com](https://unpkg.com/@cedrospay/react) - Fast, reliable, global CDN
-- [jsdelivr.com](https://cdn.jsdelivr.net/npm/@cedrospay/react) - Multi-CDN with fallback
+- [unpkg.com](https://unpkg.com/@cedros/pay-react) - Fast, reliable, global CDN
+- [jsdelivr.com](https://cdn.jsdelivr.net/npm/@cedros/pay-react) - Multi-CDN with fallback
 
 **Performance Notes:**
 
@@ -147,7 +147,7 @@ For zero-build prototyping or simple sites, you can import directly from a CDN:
 If you only need Solana crypto payments:
 
 ```bash
-npm install @cedrospay/react \
+npm install @cedros/pay-react \
   @solana/web3.js \
   @solana/spl-token \
   @solana/wallet-adapter-base \
@@ -159,8 +159,8 @@ npm install @cedrospay/react \
 Then use the `crypto-only` entry point:
 
 ```tsx
-import { CedrosProvider, CryptoButton } from "@cedrospay/react/crypto-only";
-import "@cedrospay/react/style.css";
+import { CedrosProvider, CryptoButton } from "@cedros/pay-react/crypto-only";
+import "@cedros/pay-react/style.css";
 
 function App() {
   return (
@@ -188,8 +188,8 @@ function App() {
 ### Basic Usage
 
 ```tsx
-import { CedrosPay, CedrosProvider } from "@cedrospay/react";
-import "@cedrospay/react/style.css";
+import { CedrosPay, CedrosProvider } from "@cedros/pay-react";
+import "@cedros/pay-react/style.css";
 
 function App() {
   return (
@@ -555,7 +555,7 @@ because it violates the document's Content Security Policy.
 #### Quick Start
 
 ```typescript
-import { generateCSP, RPC_PROVIDERS } from "@cedrospay/react";
+import { generateCSP, RPC_PROVIDERS } from "@cedros/pay-react";
 
 // Generate CSP for production with custom RPC
 const csp = generateCSP({
@@ -589,7 +589,7 @@ interface CSPConfig {
 
 ```typescript
 // next.config.js
-import { generateCSP } from "@cedrospay/react";
+import { generateCSP } from "@cedros/pay-react";
 
 const csp = generateCSP({
   solanaCluster: "mainnet-beta",
@@ -614,7 +614,7 @@ export default nextConfig;
 **Express with Helmet:**
 
 ```typescript
-import { generateCSP } from "@cedrospay/react";
+import { generateCSP } from "@cedros/pay-react";
 import helmet from "helmet";
 
 const cspDirectives = generateCSP(
@@ -633,7 +633,7 @@ app.use(helmet.contentSecurityPolicy({ directives: cspDirectives }));
 ```typescript
 // vite.config.ts
 import { defineConfig } from "vite";
-import { generateCSP } from "@cedrospay/react";
+import { generateCSP } from "@cedros/pay-react";
 
 const csp = generateCSP({
   solanaCluster: "devnet",
@@ -654,7 +654,7 @@ export default defineConfig({
 Use presets for common scenarios:
 
 ```typescript
-import { generateCSP, CSP_PRESETS } from "@cedrospay/react";
+import { generateCSP, CSP_PRESETS } from "@cedros/pay-react";
 
 // Production mainnet with custom RPC
 const csp1 = generateCSP(
@@ -679,7 +679,7 @@ const csp5 = generateCSP(CSP_PRESETS.STRIPE_ONLY());
 #### Common RPC Providers
 
 ```typescript
-import { RPC_PROVIDERS } from "@cedrospay/react";
+import { RPC_PROVIDERS } from "@cedros/pay-react";
 
 const csp = generateCSP({
   customRpcProviders: [
@@ -849,7 +849,7 @@ Currently available (auto-detected from `src/i18n/translations/` folder):
 **Automatic (recommended):**
 
 ```tsx
-import { useTranslation } from "@cedrospay/react";
+import { useTranslation } from "@cedros/pay-react";
 
 function PaymentButton() {
   const { t } = useTranslation(); // Auto-detects browser language
@@ -872,7 +872,7 @@ function SpanishOnlyButton() {
 **Error messages (automatic):**
 
 ```tsx
-import { PaymentError } from "@cedrospay/react";
+import { PaymentError } from "@cedros/pay-react";
 
 // Errors are automatically localized based on user's browser language
 error.getUserMessage(); // Returns localized message + action
@@ -952,16 +952,16 @@ All types are exported in versioned namespaces (`v1`, `v2`, etc.):
 
 ```tsx
 // Recommended: Use top-level exports (always points to current stable version)
-import { X402Requirement, PaymentResult } from "@cedrospay/react";
+import { X402Requirement, PaymentResult } from "@cedros/pay-react";
 
 // Explicit version (locks to v1, won't break on v2 release)
-import { v1 } from "@cedrospay/react";
+import { v1 } from "@cedros/pay-react";
 const requirement: v1.X402Requirement = {
   /* ... */
 };
 
 // Future: When v2 is released, you can migrate gradually
-import { v2 } from "@cedrospay/react";
+import { v2 } from "@cedros/pay-react";
 const newRequirement: v2.X402Requirement = {
   /* ... */
 };
@@ -978,11 +978,11 @@ If we need to change `X402Requirement.maxAmountRequired` from `string` to `bigin
 
 ```tsx
 // Your old code still works with v1
-import { v1 } from "@cedrospay/react";
+import { v1 } from "@cedros/pay-react";
 const oldReq: v1.X402Requirement = { maxAmountRequired: "1000000" };
 
 // New code uses v2
-import { v2 } from "@cedrospay/react";
+import { v2 } from "@cedros/pay-react";
 const newReq: v2.X402Requirement = { maxAmountRequired: 1000000n };
 ```
 
@@ -1112,7 +1112,7 @@ After a successful x402 payment, parse applied coupons from the settlement respo
 import {
   parseCouponCodes,
   calculateDiscountPercentage,
-} from "@cedrospay/react";
+} from "@cedros/pay-react";
 
 // Parse applied coupons
 const appliedCoupons = parseCouponCodes(settlement.metadata);
@@ -1357,7 +1357,7 @@ Cedros Pay includes structured logging with configurable log levels to control v
 ### Log Levels
 
 ```typescript
-import { LogLevel } from "@cedrospay/react";
+import { LogLevel } from "@cedros/pay-react";
 
 export enum LogLevel {
   DEBUG = 0, // Detailed debug information (verbose)
@@ -1378,7 +1378,7 @@ export enum LogLevel {
 Control logging verbosity via the `logLevel` prop:
 
 ```typescript
-import { CedrosProvider, LogLevel } from '@cedrospay/react';
+import { CedrosProvider, LogLevel } from '@cedros/pay-react';
 
 // Production: Only show errors
 <CedrosProvider
@@ -1422,7 +1422,7 @@ import { CedrosProvider, LogLevel } from '@cedrospay/react';
 For custom logging or integration with your logging infrastructure:
 
 ```typescript
-import { createLogger, LogLevel } from "@cedrospay/react";
+import { createLogger, LogLevel } from "@cedros/pay-react";
 
 // Create a custom logger instance
 const logger = createLogger({
@@ -1493,7 +1493,7 @@ We follow [Semantic Versioning](https://semver.org/):
 
 ```typescript
 // ✅ CORRECT: Use interface from context
-import { useCedrosContext } from '@cedrospay/react';
+import { useCedrosContext } from '@cedros/pay-react';
 
 function MyComponent() {
   const { stripeManager } = useCedrosContext();
@@ -1502,7 +1502,7 @@ function MyComponent() {
 }
 
 // ❌ WRONG: Direct class import (unsupported)
-import { StripeManager } from '@cedrospay/react'; // Not exported
+import { StripeManager } from '@cedros/pay-react'; // Not exported
 const manager = new StripeManager(...); // Will break
 ```
 
@@ -1527,14 +1527,14 @@ Types use versioned namespaces to prevent breaking changes:
 
 ```typescript
 // Top-level exports (current stable version)
-import { X402Requirement } from '@cedrospay/react';
+import { X402Requirement } from '@cedros/pay-react';
 
 // Explicit version (locks to v1, won't break on v2)
-import { v1 } from '@cedrospay/react';
+import { v1 } from '@cedros/pay-react';
 const req: v1.X402Requirement = { ... };
 
 // Future version
-import { v2 } from '@cedrospay/react';
+import { v2 } from '@cedros/pay-react';
 const newReq: v2.X402Requirement = { ... };
 ```
 
@@ -1556,7 +1556,7 @@ Cedros Pay includes **opt-in error telemetry** with correlation IDs for producti
 ### Quick Start
 
 ```typescript
-import { configureTelemetry, ErrorSeverity } from "@cedrospay/react";
+import { configureTelemetry, ErrorSeverity } from "@cedros/pay-react";
 import * as Sentry from "@sentry/react";
 
 // Enable telemetry with Sentry
@@ -1605,7 +1605,7 @@ configureTelemetry({
 ### Correlation IDs for Support
 
 ```typescript
-import { generateCorrelationId } from "@cedrospay/react";
+import { generateCorrelationId } from "@cedros/pay-react";
 
 function PaymentButton() {
   const [correlationId] = useState(generateCorrelationId());

@@ -78,7 +78,7 @@ export interface IStripeManager {
  *
  * **Correct Usage:**
  * ```typescript
- * import { useCedrosContext } from '@cedrospay/react';
+ * import { useCedrosContext } from '@cedros/pay-react';
  *
  * function MyComponent() {
  *   const { stripeManager } = useCedrosContext();
@@ -89,7 +89,7 @@ export interface IStripeManager {
  *
  * **Incorrect Usage (WILL BREAK):**
  * ```typescript
- * import { StripeManager } from '@cedrospay/react'; // ❌ Not exported
+ * import { StripeManager } from '@cedros/pay-react'; // ❌ Not exported
  * const manager = new StripeManager(...); // ❌ Unsupported
  * ```
  *

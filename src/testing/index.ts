@@ -2,7 +2,7 @@
  * Testing Utilities for Cedros Pay
  *
  * Export mock providers and helpers to make testing payment flows easier.
- * Import from '@cedrospay/react/testing' in your tests.
+ * Import from '@cedros/pay-react/testing' in your tests.
  *
  * @packageDocumentation
  */

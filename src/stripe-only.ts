@@ -1,5 +1,5 @@
 /**
- * @cedrospay/react/stripe-only
+ * @cedros/pay-react/stripe-only
  *
  * Stripe-only build (no Solana dependencies)
  * Bundle size: ~75KB (vs ~950KB for full build)
@@ -9,7 +9,7 @@
  * @example
  * ```typescript
  * // In your package.json or import statement
- * import { CedrosProvider, StripeButton } from '@cedrospay/react/stripe-only';
+ * import { CedrosProvider, StripeButton } from '@cedros/pay-react/stripe-only';
  * ```
  */
 

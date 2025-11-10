@@ -1,5 +1,5 @@
 /**
- * @cedrospay/react - Unified Stripe and Solana payments for React
+ * @cedros/pay-react - Unified Stripe and Solana payments for React
  *
  * Main library exports
  */

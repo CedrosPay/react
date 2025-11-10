@@ -85,7 +85,7 @@ function checkCSP(): SecurityCheckResult {
     passed: false,
     severity: 'warning',
     message: 'No Content Security Policy detected',
-    recommendation: 'Configure CSP headers to protect against XSS and CDN compromise. Use generateCSP() helper from @cedrospay/react.',
+    recommendation: 'Configure CSP headers to protect against XSS and CDN compromise. Use generateCSP() helper from @cedros/pay-react.',
   };
 }
 
@@ -164,7 +164,7 @@ function checkMixedContent(): SecurityCheckResult {
  *
  * @example
  * ```typescript
- * import { validateSecurity } from '@cedrospay/react';
+ * import { validateSecurity } from '@cedros/pay-react';
  *
  * const report = validateSecurity();
  * console.log(report.summary);
@@ -223,7 +223,7 @@ export function validateSecurity(): SecurityReport {
  *
  * @example
  * ```typescript
- * import { validateSecurity, logSecurityReport } from '@cedrospay/react';
+ * import { validateSecurity, logSecurityReport } from '@cedros/pay-react';
  *
  * const report = validateSecurity();
  * logSecurityReport(report);
@@ -254,9 +254,9 @@ export function logSecurityReport(report: SecurityReport): void {
  * Security recommendations for production deployment
  */
 export const SECURITY_RECOMMENDATIONS = {
-  CSP: 'Use generateCSP() from @cedrospay/react to generate Content Security Policy headers',
+  CSP: 'Use generateCSP() from @cedros/pay-react to generate Content Security Policy headers',
   HTTPS: 'Always serve payment pages over HTTPS in production',
-  PACKAGE_UPDATES: 'Keep @stripe/stripe-js and @cedrospay/react updated for security patches',
+  PACKAGE_UPDATES: 'Keep @stripe/stripe-js and @cedros/pay-react updated for security patches',
   AUDIT: 'Run npm audit regularly to check for known vulnerabilities',
   MONITORING: 'Monitor Stripe security advisories and apply updates promptly',
   NO_SRI: 'Do NOT use SRI hashes for Stripe.js - use CSP instead',

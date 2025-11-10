@@ -31,7 +31,7 @@ export interface MockCedrosProviderConfig extends Partial<CedrosConfig> {
  * @example
  * ```typescript
  * import { render } from '@testing-library/react';
- * import { createMockCedrosProvider } from '@cedrospay/react/testing';
+ * import { createMockCedrosProvider } from '@cedros/pay-react/testing';
  *
  * const MockProvider = createMockCedrosProvider({
  *   stripePublicKey: 'pk_test_mock',
@@ -101,7 +101,7 @@ export function createMinimalMockProvider() {
  *
  * @example
  * ```typescript
- * import { mockWalletProvider } from '@cedrospay/react/testing';
+ * import { mockWalletProvider } from '@cedros/pay-react/testing';
  *
  * const WalletProvider = mockWalletProvider({
  *   connected: true,

@@ -129,7 +129,7 @@ export interface IX402Manager {
  *
  * **Correct Usage:**
  * ```typescript
- * import { useCedrosContext } from '@cedrospay/react';
+ * import { useCedrosContext } from '@cedros/pay-react';
  *
  * function MyComponent() {
  *   const { x402Manager } = useCedrosContext();

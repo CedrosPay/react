@@ -1,5 +1,5 @@
 /**
- * @cedrospay/react/crypto-only
+ * @cedros/pay-react/crypto-only
  *
  * Crypto-only build (no Stripe dependencies)
  * Bundle size: ~900KB (Solana web3.js + wallet adapters)
@@ -9,7 +9,7 @@
  * @example
  * ```typescript
  * // In your package.json or import statement
- * import { CedrosProvider, CryptoButton } from '@cedrospay/react/crypto-only';
+ * import { CedrosProvider, CryptoButton } from '@cedros/pay-react/crypto-only';
  * ```
  */
 

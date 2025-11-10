@@ -1,12 +1,12 @@
 /**
- * @cedrospay/react/telemetry - Optional error telemetry module
+ * @cedros/pay-react/telemetry - Optional error telemetry module
  *
  * This module is opt-in and provides error tracking, correlation IDs,
  * and PII sanitization for integration with monitoring services.
  *
  * **Usage:**
  * ```typescript
- * import { configureTelemetry, ErrorSeverity } from '@cedrospay/react/telemetry';
+ * import { configureTelemetry, ErrorSeverity } from '@cedros/pay-react/telemetry';
  * import * as Sentry from '@sentry/react';
  *
  * configureTelemetry({
