@@ -1,6 +1,6 @@
 {
   "name": "@cedros/pay-react",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "React frontend library for Cedros Pay - unified Stripe and Solana x402 payments",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
@@ -62,8 +62,8 @@
     "@solana/wallet-adapter-react-ui": "^0.9.39",
     "@solana/wallet-adapter-wallets": "^0.19.32",
     "@solana/web3.js": "^1.95.0",
-    "react": "^18.0.0",
-    "react-dom": "^18.0.0"
+    "react": "^18.0.0 || ^19.0.0",
+    "react-dom": "^18.0.0 || ^19.0.0"
   },
   "peerDependenciesMeta": {
     "@solana/spl-token": {
