@@ -2,11 +2,12 @@
 import './polyfills';
 
 import type { Decorator, Preview } from '@storybook/react';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Title, Subtitle, Description, Primary, Controls, Stories } from '@storybook/addon-docs/blocks';
 import { CedrosProvider } from '../src';
 import './preview.css';
 import '../src/styles.css';
+import { getEffectiveRpcEndpoint, getEffectiveServerUrl } from '../stories/utils/storybookSettings';
 
 const withCedrosProvider: Decorator = (Story, context) => {
   const {
@@ -20,15 +21,30 @@ const withCedrosProvider: Decorator = (Story, context) => {
   const storyArgs = context.args as { themeOverrides?: Record<string, string> };
   const overridesFromArgs = storyArgs?.themeOverrides;
 
+  // State to force re-render when settings change
+  const [settingsVersion, setSettingsVersion] = useState(0);
+
+  useEffect(() => {
+    const handleSettingsChange = () => {
+      setSettingsVersion(v => v + 1);
+    };
+
+    window.addEventListener('storybook-settings-changed', handleSettingsChange);
+    return () => window.removeEventListener('storybook-settings-changed', handleSettingsChange);
+  }, []);
+
   const env = (import.meta as unknown as { env?: Record<string, string> }).env ?? {};
 
   const stripePublicKey: string = env.VITE_STRIPE_PUBLIC_KEY ?? 'pk_test_placeholder';
-  const serverUrl: string = env.VITE_STORYBOOK_SERVER_URL ?? env.VITE_SERVER_URL ?? 'http://localhost:8080';
+
+  // Use settings utility functions that check localStorage first, then env vars
+  const serverUrl: string = getEffectiveServerUrl();
+  const solanaEndpoint: string = getEffectiveRpcEndpoint();
   const solanaCluster = (env.VITE_SOLANA_CLUSTER as 'mainnet-beta' | 'devnet' | 'testnet') ?? 'mainnet-beta';
-  const solanaEndpoint: string | undefined = env.VITE_STORYBOOK_SOLANA_ENDPOINT ?? env.VITE_SOLANA_RPC_URL;
 
   return (
     <CedrosProvider
+      key={settingsVersion} // Force re-mount when settings change
       config={{
         stripePublicKey,
         serverUrl,

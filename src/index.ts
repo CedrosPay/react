@@ -73,6 +73,8 @@ export {
   parseCouponCodes,
   formatCouponCodes,
   calculateDiscountPercentage,
+  stackCheckoutCoupons,
+  type Coupon,
   createRateLimiter,
   RATE_LIMITER_PRESETS,
   type RateLimiter,

@@ -1,5 +1,10 @@
 import type { StorybookConfig } from 'storybook';
 import { loadEnv } from 'vite';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // SECURITY: Only load VITE_STORYBOOK_* variables to prevent leaking production secrets
 const env = loadEnv(process.env.NODE_ENV ?? 'development', process.cwd(), 'VITE_STORYBOOK_');
@@ -26,40 +31,21 @@ const config: StorybookConfig = {
       ...config.define,
       'import.meta.env.VITE_STORYBOOK_SERVER_URL': JSON.stringify(env.VITE_STORYBOOK_SERVER_URL ?? ''),
       'import.meta.env.VITE_STORYBOOK_SOLANA_ENDPOINT': JSON.stringify(env.VITE_STORYBOOK_SOLANA_ENDPOINT ?? ''),
+      // Also expose as VITE_SERVER_URL for backward compatibility with stories
+      'import.meta.env.VITE_SERVER_URL': JSON.stringify(env.VITE_STORYBOOK_SERVER_URL ?? ''),
     };
 
-    // Configure Vite to exclude uuid from dependency optimization
-    // @particle-network packages import uuid (Node.js package), but we use browser-compatible UUID
-    if (!config.optimizeDeps) config.optimizeDeps = {};
-    if (!config.optimizeDeps.exclude) config.optimizeDeps.exclude = [];
-    config.optimizeDeps.exclude.push('uuid');
-
-    // Configure rollup to handle uuid dependency from @particle-network
-    if (!config.build) config.build = {};
-    if (!config.build.rollupOptions) config.build.rollupOptions = {};
-
-    // Preserve existing external configuration and add uuid
-    const existingExternal = config.build.rollupOptions.external;
-    config.build.rollupOptions.external = (id: string, importer: string | undefined, isResolved: boolean) => {
-      // Check uuid first
-      if (id === 'uuid' || id.startsWith('uuid/')) {
-        return true;
-      }
-      // Then delegate to existing external config if it exists
-      if (existingExternal) {
-        if (typeof existingExternal === 'function') {
-          return existingExternal(id, importer, isResolved);
-        }
-        if (Array.isArray(existingExternal)) {
-          return existingExternal.includes(id);
-        }
-        if (existingExternal instanceof RegExp) {
-          return existingExternal.test(id);
-        }
-        return existingExternal === id;
-      }
-      return false;
+    // Add resolve alias to map uuid to our browser-safe implementation
+    if (!config.resolve) config.resolve = {};
+    if (!config.resolve.alias) config.resolve.alias = {};
+    const existingAlias = config.resolve.alias;
+    config.resolve.alias = {
+      ...(typeof existingAlias === 'object' && !Array.isArray(existingAlias) ? existingAlias : {}),
+      'uuid': path.resolve(__dirname, '../src/utils/uuid-shim.ts'),
     };
+
+    // No additional optimizeDeps or external configuration needed
+    // The resolve alias above will handle uuid imports by redirecting to our shim
 
     return config;
   }

@@ -338,6 +338,7 @@ go get github.com/cedros-pay/server
 - `POST /paywall/v1/quote` - x402 payment quote (resource ID in body)
 - `POST /paywall/v1/verify` - Payment verification (resource ID in X-PAYMENT header)
 - `POST /paywall/v1/stripe-session` - Create Stripe checkout (single item)
+- `GET /paywall/v1/stripe-session/verify` - Verify Stripe payment session (security-critical)
 - `POST /paywall/v1/cart/checkout` - Create Stripe checkout (cart)
 - `POST /paywall/v1/cart/quote` - Get x402 quote for cart items
 - `POST /paywall/v1/gasless-transaction` - Build gasless transaction (optional)

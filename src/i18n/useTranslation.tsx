@@ -80,8 +80,23 @@ export function useTranslation(requestedLocale?: Locale): UseTranslationResult {
   // Create translator function
   const t = useMemo(() => {
     if (!translations) {
-      // Fallback translator (returns key if translations not loaded)
-      return (key: string) => key;
+      // Fallback translator with English defaults to prevent flashing translation keys
+      return (key: string) => {
+        const fallbacks: Record<string, string> = {
+          'ui.purchase': 'Purchase',
+          'ui.pay_with_card': 'Pay with Card',
+          'ui.pay_with_crypto': 'Pay with USDC',
+          'ui.pay_with_usdc': 'Pay with USDC',
+          'ui.card': 'Card',
+          'ui.usdc_solana': 'USDC (Solana)',
+          'ui.crypto': 'Crypto',
+          'ui.processing': 'Processing...',
+          'ui.loading': 'Loading...',
+          'ui.connect_wallet': 'Connect Wallet',
+          'ui.connecting': 'Connecting...',
+        };
+        return fallbacks[key] || key;
+      };
     }
     return createTranslator(translations);
   }, [translations]);

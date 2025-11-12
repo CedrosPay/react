@@ -1,5 +1,5 @@
 export { validateConfig } from './validateConfig';
-export { parseCouponCodes, formatCouponCodes, calculateDiscountPercentage } from './couponHelpers';
+export { parseCouponCodes, formatCouponCodes, calculateDiscountPercentage, stackCheckoutCoupons, type Coupon } from './couponHelpers';
 export { isCartCheckout, normalizeCartItems, type NormalizedCartItem } from './cartHelpers';
 export { formatError, parseErrorResponse } from './errorHandling';
 export {
