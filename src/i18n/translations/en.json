@@ -22,7 +22,13 @@
     "go_back": "Go Back",
     "contact_support": "Contact Support",
     "disconnect": "Disconnect",
-    "payment_successful": "Payment successful!"
+    "payment_successful": "Payment successful!",
+    "subscribe": "Subscribe",
+    "subscribe_with_crypto": "Subscribe with USDC",
+    "subscribed": "Subscribed",
+    "subscribed_until": "Subscribed until",
+    "subscription_active": "Your subscription is active!",
+    "redirecting_to_checkout": "Redirecting to checkout..."
   },
 
   "errors": {
@@ -242,6 +248,7 @@
     "try_again": "Please try connecting again.",
     "transaction_rejected": "Transaction was rejected",
     "approve_in_wallet": "Please approve the transaction in your wallet to continue.",
-    "select_wallet": "Select Wallet"
+    "select_wallet": "Select Wallet",
+    "change": "Change Wallet"
   }
 }

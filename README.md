@@ -1115,6 +1115,112 @@ const newReq: v2.X402Requirement = { maxAmountRequired: 1000000n };
 />
 ```
 
+### Subscriptions
+
+Cedros Pay supports recurring subscriptions with both Stripe and crypto (x402) payments.
+
+**Stripe Subscription Checkout:**
+
+```tsx
+import { SubscribeButton } from "@cedros/pay-react";
+
+<SubscribeButton
+  resource="plan-pro"
+  interval="monthly"
+  trialDays={14}
+  onSubscriptionSuccess={(result) => {
+    console.log("Subscribed:", result.subscriptionStatus);
+  }}
+/>;
+```
+
+**Crypto Subscription (x402):**
+
+```tsx
+import { CryptoSubscribeButton } from "@cedros/pay-react";
+
+<CryptoSubscribeButton
+  resource="plan-pro"
+  interval="monthly"
+  onSubscriptionSuccess={(result) => {
+    console.log("Subscription active until:", result.expiresAt);
+  }}
+/>;
+```
+
+**Subscription Management (Upgrade/Downgrade/Cancel):**
+
+```tsx
+import { SubscriptionManagementPanel } from "@cedros/pay-react";
+
+<SubscriptionManagementPanel
+  resource="plan-pro"
+  userId="user@example.com"
+  availablePlans={[
+    { resource: "plan-basic", name: "Basic", price: 999, currency: "USD", interval: "monthly" },
+    { resource: "plan-pro", name: "Pro", price: 1999, currency: "USD", interval: "monthly" },
+    { resource: "plan-enterprise", name: "Enterprise", price: 4999, currency: "USD", interval: "monthly" },
+  ]}
+  onSubscriptionChanged={(newResource) => console.log("Changed to:", newResource)}
+  onSubscriptionCanceled={() => console.log("Subscription canceled")}
+  showBillingPortal
+/>;
+```
+
+**Programmatic Subscription Management:**
+
+```tsx
+import { useSubscriptionManagement } from "@cedros/pay-react";
+
+function SubscriptionSettings({ userId }: { userId: string }) {
+  const {
+    subscription,
+    status,
+    loadSubscription,
+    previewChange,
+    changeSubscription,
+    cancelSubscription,
+    openBillingPortal,
+  } = useSubscriptionManagement();
+
+  useEffect(() => {
+    loadSubscription("plan-pro", userId);
+  }, [userId]);
+
+  const handleUpgrade = async () => {
+    // Preview proration before confirming
+    const preview = await previewChange("plan-pro", "plan-enterprise", userId);
+    if (preview && confirm(`Upgrade for $${preview.immediateAmount / 100}?`)) {
+      await changeSubscription({ newResource: "plan-enterprise" });
+    }
+  };
+
+  return (
+    <div>
+      {subscription && (
+        <>
+          <p>Plan: {subscription.resource}</p>
+          <p>Status: {subscription.status}</p>
+          <button onClick={handleUpgrade}>Upgrade to Enterprise</button>
+          <button onClick={() => cancelSubscription(false)}>Cancel at Period End</button>
+          <button onClick={() => openBillingPortal(userId)}>Manage Billing</button>
+        </>
+      )}
+    </div>
+  );
+}
+```
+
+**Billing Intervals:** `weekly`, `monthly`, `yearly`, `custom`
+
+**Subscription Features:**
+
+- Trial periods (Stripe)
+- Proration on plan changes
+- Immediate or period-end cancellation
+- Stripe billing portal integration
+- Backend-verified subscription status for x402 gating
+
 ### Coupon Codes
 
 ```tsx
@@ -1572,9 +1678,9 @@ We follow [Semantic Versioning](https://semver.org/):
 
 **These exports are guaranteed stable** and follow semantic versioning:
 
-- ✅ **Components** - All exported React components (CedrosPay, StripeButton, CryptoButton, etc.)
-- ✅ **Hooks** - useCedrosContext, useStripeCheckout, useX402Payment, etc.
-- ✅ **Manager Interfaces** - IStripeManager, IX402Manager, IWalletManager, IRouteDiscoveryManager
+- ✅ **Components** - All exported React components (CedrosPay, StripeButton, CryptoButton, SubscribeButton, CryptoSubscribeButton, SubscriptionManagementPanel, etc.)
+- ✅ **Hooks** - useCedrosContext, useStripeCheckout, useX402Payment, useSubscription, useCryptoSubscription, useSubscriptionManagement, etc.
+- ✅ **Manager Interfaces** - IStripeManager, IX402Manager, IWalletManager, ISubscriptionManager, ISubscriptionChangeManager, IRouteDiscoveryManager
 - ✅ **Types** - All types exported via versioned namespaces (v1, v2, etc.)
 - ✅ **Utilities** - validateConfig, parseCouponCodes, rate limiters, logging, events
 

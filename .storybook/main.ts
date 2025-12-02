@@ -12,6 +12,7 @@ const env = loadEnv(process.env.NODE_ENV ?? 'development', process.cwd(), 'VITE_
 const config: StorybookConfig = {
   stories: ['../stories/**/*.stories.@(ts|tsx)'],
   addons: ['@storybook/addon-docs'],
+  staticDirs: ['./public'],
 
   framework: {
     name: '@storybook/react-vite',

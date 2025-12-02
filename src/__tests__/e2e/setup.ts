@@ -17,6 +17,7 @@
 import { vi } from 'vitest';
 import type { Stripe } from '@stripe/stripe-js';
 import type { Connection, Transaction, VersionedTransaction } from '@solana/web3.js';
+import { clearDeduplicationCache } from '../../utils/requestDeduplication';
 
 /**
  * Mock Stripe instance for E2E tests
@@ -202,4 +203,7 @@ export function waitForAsync(ms: number = 100): Promise<void> {
 export function cleanupE2E() {
   vi.clearAllMocks();
   vi.restoreAllMocks();
+
+  // Clear deduplication cache to prevent test pollution
+  clearDeduplicationCache();
 }

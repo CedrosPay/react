@@ -71,6 +71,11 @@
   gap: 0.75rem;
 }
 
+.cedros-theme__pay-content--horizontal .cedros-theme__button {
+  flex: 1;
+  min-width: 0;
+}
+
 .cedros-theme__pay-content--vertical {
   flex-direction: column;
 }

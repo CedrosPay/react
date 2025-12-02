@@ -34,6 +34,8 @@
 import { StripeManager, type IStripeManager } from './StripeManager';
 import { X402Manager, type IX402Manager } from './X402Manager';
 import { WalletManager, type IWalletManager } from './WalletManager';
+import { SubscriptionManager, type ISubscriptionManager } from './SubscriptionManager';
+import { SubscriptionChangeManager, type ISubscriptionChangeManager } from './SubscriptionChangeManager';
 import { RouteDiscoveryManager } from './RouteDiscoveryManager';
 import { getLogger } from '../utils/logger';
 import type { SolanaCluster } from '../types';
@@ -45,6 +47,8 @@ interface CachedManagers {
   stripeManager: IStripeManager;
   x402Manager: IX402Manager;
   walletManager: IWalletManager;
+  subscriptionManager: ISubscriptionManager;
+  subscriptionChangeManager: ISubscriptionChangeManager;
   routeDiscovery: RouteDiscoveryManager;
   refCount: number; // Track number of providers using this cache entry
 }
@@ -102,6 +106,8 @@ export function getOrCreateManagers(
   stripeManager: IStripeManager;
   x402Manager: IX402Manager;
   walletManager: IWalletManager;
+  subscriptionManager: ISubscriptionManager;
+  subscriptionChangeManager: ISubscriptionChangeManager;
   routeDiscovery: RouteDiscoveryManager;
 } {
   const cacheKey = getCacheKey(
@@ -139,12 +145,16 @@ export function getOrCreateManagers(
     solanaEndpoint,
     dangerouslyAllowUnknownMint ?? false
   );
+  const subscriptionManager = new SubscriptionManager(stripePublicKey, routeDiscovery);
+  const subscriptionChangeManager = new SubscriptionChangeManager(routeDiscovery);
 
   // Cache with initial refCount of 1
   cached = {
     stripeManager,
     x402Manager,
     walletManager,
+    subscriptionManager,
+    subscriptionChangeManager,
     routeDiscovery,
     refCount: 1,
   };

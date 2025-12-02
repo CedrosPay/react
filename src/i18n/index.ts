@@ -39,6 +39,13 @@ export interface Translations {
     contact_support: string;
     disconnect: string;
     payment_successful: string;
+    // Subscription UI strings
+    subscribe: string;
+    subscribe_with_crypto: string;
+    subscribed: string;
+    subscribed_until: string;
+    subscription_active: string;
+    redirecting_to_checkout: string;
   };
   errors: {
     [errorCode: string]: {
@@ -60,6 +67,7 @@ export interface Translations {
     transaction_rejected: string;
     approve_in_wallet: string;
     select_wallet: string;
+    change: string;
   };
 }
 

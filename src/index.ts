@@ -14,6 +14,13 @@ export { PaymentModal } from './components/PaymentModal';
 export type { PaymentModalProps } from './components/PaymentModal';
 export { ProductPrice, PaymentMethodBadge } from './components/ProductPrice';
 export type { PaymentMethod } from './components/ProductPrice';
+export { SubscribeButton } from './components/SubscribeButton';
+export { CryptoSubscribeButton } from './components/CryptoSubscribeButton';
+export { SubscriptionManagementPanel } from './components/SubscriptionManagementPanel';
+export type {
+  SubscriptionManagementPanelProps,
+  AvailablePlan,
+} from './components/SubscriptionManagementPanel';
 
 // Context
 export { CedrosProvider, useCedrosContext, useCedrosTheme, type CedrosContextValue } from './context';
@@ -23,6 +30,13 @@ export { useStripeCheckout } from './hooks/useStripeCheckout';
 export { useX402Payment } from './hooks/useX402Payment';
 export { useRefundVerification } from './hooks/useRefundVerification';
 export { usePaymentMode } from './hooks/usePaymentMode';
+export { useSubscription } from './hooks/useSubscription';
+export { useCryptoSubscription } from './hooks/useCryptoSubscription';
+export { useSubscriptionManagement } from './hooks/useSubscriptionManagement';
+export type {
+  SubscriptionManagementState,
+  ChangeOptions,
+} from './hooks/useSubscriptionManagement';
 
 // Types
 export type {
@@ -55,6 +69,28 @@ export type {
   ModalRenderProps,
   CallbackOptions,
   AdvancedOptions,
+  // Subscription types
+  BillingInterval,
+  SubscriptionStatus,
+  SubscriptionSessionRequest,
+  SubscriptionSessionResponse,
+  SubscriptionStatusRequest,
+  SubscriptionStatusResponse,
+  SubscriptionQuote,
+  SubscriptionState,
+  SubscriptionPaymentResult,
+  CancelSubscriptionRequest,
+  CancelSubscriptionResponse,
+  BillingPortalRequest,
+  BillingPortalResponse,
+  ActivateX402SubscriptionRequest,
+  ActivateX402SubscriptionResponse,
+  ProrationBehavior,
+  ChangeSubscriptionRequest,
+  ChangeSubscriptionResponse,
+  ChangePreviewRequest,
+  ChangePreviewResponse,
+  SubscriptionDetails,
 } from './types';
 
 // Error code categories (for bulk error handling)
@@ -65,6 +101,8 @@ export { ERROR_CATEGORIES } from './types/errors';
 export type { IStripeManager } from './managers/StripeManager';
 export type { IX402Manager } from './managers/X402Manager';
 export type { IWalletManager } from './managers/WalletManager';
+export type { ISubscriptionManager, SubscriptionQuoteOptions } from './managers/SubscriptionManager';
+export type { ISubscriptionChangeManager } from './managers/SubscriptionChangeManager';
 export type { IRouteDiscoveryManager } from './managers/RouteDiscoveryManager';
 
 // Utils

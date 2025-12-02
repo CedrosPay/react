@@ -3,6 +3,8 @@ import type { CedrosConfig } from '../types';
 import { type IStripeManager } from '../managers/StripeManager';
 import { type IX402Manager } from '../managers/X402Manager';
 import { type IWalletManager } from '../managers/WalletManager';
+import { type ISubscriptionManager } from '../managers/SubscriptionManager';
+import { type ISubscriptionChangeManager } from '../managers/SubscriptionChangeManager';
 import { getOrCreateManagers, releaseManagers } from '../managers/ManagerCache';
 import { validateConfig } from '../utils';
 import { CedrosThemeProvider } from './ThemeContext';
@@ -31,6 +33,8 @@ export interface CedrosContextValue {
   stripeManager: IStripeManager;
   x402Manager: IX402Manager;
   walletManager: IWalletManager;
+  subscriptionManager: ISubscriptionManager;
+  subscriptionChangeManager: ISubscriptionChangeManager;
   /** Context-scoped wallet pool (for internal use by CedrosPay component) */
   walletPool: WalletPool;
   /** Cached Solana availability check result (null = not checked yet, string = error message, undefined = available) */
@@ -142,19 +146,22 @@ export function CedrosProvider({ config, children }: CedrosProviderProps) {
   // Multiple providers with identical configs share manager instances (e.g., same Stripe.js load)
   // Wallet pools remain isolated per provider for multi-tenant security
   const contextValue = useMemo(() => {
-    const { stripeManager, x402Manager, walletManager } = getOrCreateManagers(
-      validatedConfig.stripePublicKey,
-      validatedConfig.serverUrl ?? '',
-      validatedConfig.solanaCluster,
-      validatedConfig.solanaEndpoint,
-      validatedConfig.dangerouslyAllowUnknownMint
-    );
+    const { stripeManager, x402Manager, walletManager, subscriptionManager, subscriptionChangeManager } =
+      getOrCreateManagers(
+        validatedConfig.stripePublicKey,
+        validatedConfig.serverUrl ?? '',
+        validatedConfig.solanaCluster,
+        validatedConfig.solanaEndpoint,
+        validatedConfig.dangerouslyAllowUnknownMint
+      );
 
     return {
       config: validatedConfig,
       stripeManager,
       x402Manager,
       walletManager,
+      subscriptionManager,
+      subscriptionChangeManager,
       walletPool: walletPoolRef.current!,
       solanaError,
     };

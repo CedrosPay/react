@@ -9,13 +9,111 @@
  * 5. Memory cleanup on unmount
  */
 
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import React from 'react';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { render, cleanup } from '@testing-library/react';
 import { CedrosProvider, useCedrosContext } from '../../context';
 import { StripeButton } from '../../components/StripeButton';
-import { mockLoadStripe, mockBackendAPIs, cleanupE2E } from './setup';
+import { mockBackendAPIs, cleanupE2E } from './setup';
 import { getManagerCacheStats } from '../../managers/ManagerCache';
 import type { CedrosConfig } from '../../types';
+
+// Mock Stripe instance
+const mockStripeInstance = {
+  redirectToCheckout: vi.fn().mockResolvedValue({ error: null }),
+};
+
+// Hoisted mocks - these run before any imports
+vi.mock('@solana/web3.js', () => ({
+  clusterApiUrl: vi.fn(() => 'https://api.devnet.solana.com'),
+  Connection: class {
+    async getLatestBlockhash() {
+      return { blockhash: 'mock-blockhash', lastValidBlockHeight: 1000000 };
+    }
+    async getBalance() {
+      return 1000000000;
+    }
+    async getSignatureStatus() {
+      return { value: { confirmationStatus: 'confirmed' } };
+    }
+    async getAccountInfo() {
+      return null;
+    }
+  },
+  SystemProgram: {
+    transfer: vi.fn(() => ({})),
+  },
+  Transaction: class {
+    recentBlockhash?: string;
+    feePayer?: unknown;
+    instructions: unknown[] = [];
+    add(instruction: unknown) {
+      this.instructions.push(instruction);
+      return this;
+    }
+    serialize() {
+      return new Uint8Array([1, 2, 3]);
+    }
+  },
+  LAMPORTS_PER_SOL: 1_000_000_000,
+  PublicKey: class {
+    constructor(public value: string | Uint8Array) {}
+    toString() {
+      return typeof this.value === 'string' ? this.value : 'mockPublicKey';
+    }
+    toBase58() {
+      return this.toString();
+    }
+  },
+}));
+
+vi.mock('@solana/spl-token', () => ({
+  getAssociatedTokenAddress: vi.fn(async () => ({
+    toBase58: () => 'mockTokenAddress',
+  })),
+  createTransferInstruction: vi.fn(() => ({})),
+}));
+
+vi.mock('@solana/wallet-adapter-react', () => ({
+  ConnectionProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+  WalletProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+  useWallet: () => ({
+    connected: false,
+    connecting: false,
+    connect: vi.fn(),
+    disconnect: vi.fn(),
+    publicKey: null,
+    signTransaction: vi.fn(),
+    signAllTransactions: vi.fn(),
+    select: vi.fn(),
+    wallets: [],
+    wallet: null,
+  }),
+  useConnection: () => ({
+    connection: {
+      getLatestBlockhash: vi.fn().mockResolvedValue({
+        blockhash: 'mock-blockhash',
+        lastValidBlockHeight: 1000000,
+      }),
+    },
+  }),
+}));
+
+vi.mock('@solana/wallet-adapter-wallets', () => ({
+  PhantomWalletAdapter: class {
+    name = 'Phantom';
+  },
+  SolflareWalletAdapter: class {
+    name = 'Solflare';
+  },
+  BackpackWalletAdapter: class {
+    name = 'Backpack';
+  },
+}));
+
+vi.mock('@stripe/stripe-js', () => ({
+  loadStripe: vi.fn(async () => mockStripeInstance),
+}));
 
 describe('E2E: Multi-Provider Scenarios', () => {
   let cleanupFetch: () => void;
@@ -33,7 +131,6 @@ describe('E2E: Multi-Provider Scenarios', () => {
   };
 
   beforeEach(() => {
-    mockLoadStripe();
     cleanupFetch = mockBackendAPIs();
   });
 
@@ -83,9 +180,6 @@ describe('E2E: Multi-Provider Scenarios', () => {
     });
 
     it('prevents duplicate Stripe.js loads for same public key', async () => {
-      // Track loadStripe calls
-      const { loadStripe } = await import('@stripe/stripe-js');
-
       // Render 3 providers with same config
       render(
         <CedrosProvider config={config1}>
@@ -104,10 +198,6 @@ describe('E2E: Multi-Provider Scenarios', () => {
           <StripeButton resource="product-3" />
         </CedrosProvider>
       );
-
-      // loadStripe should only be called once (lazy-loaded on first use)
-      // Note: In E2E tests, we're mocking loadStripe, so this tests the pattern
-      expect(loadStripe).toBeDefined();
 
       // Cache stats confirm sharing
       const stats = getManagerCacheStats();

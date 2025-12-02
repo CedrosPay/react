@@ -295,3 +295,28 @@ export type {
   CallbackOptions,
   AdvancedOptions,
 } from './componentOptions';
+
+// Subscription types
+export type {
+  BillingInterval,
+  SubscriptionStatus,
+  SubscriptionSessionRequest,
+  SubscriptionSessionResponse,
+  SubscriptionStatusRequest,
+  SubscriptionStatusResponse,
+  SubscriptionQuote,
+  SubscriptionState,
+  SubscriptionPaymentResult,
+  CancelSubscriptionRequest,
+  CancelSubscriptionResponse,
+  BillingPortalRequest,
+  BillingPortalResponse,
+  ActivateX402SubscriptionRequest,
+  ActivateX402SubscriptionResponse,
+  ProrationBehavior,
+  ChangeSubscriptionRequest,
+  ChangeSubscriptionResponse,
+  ChangePreviewRequest,
+  ChangePreviewResponse,
+  SubscriptionDetails,
+} from './subscription';
